@@ -1,6 +1,6 @@
 #!/bin/sh
 
-usage() { echo "Usage: $0 [-d postgres database] [-s shapefile directory]" 1>&2; exit 1; }
+usage() { echo "Usage: $0 [-d postgres database] [-s shapefile directory] [-c csv data directory]" 1>&2; exit 1; }
 
 while getopts ":d:s:" opt; do
   case $opt in
@@ -10,6 +10,12 @@ while getopts ":d:s:" opt; do
     s)
       shapefile_dir=$OPTARG
       ;;
+    c)
+      csv_dir=$OPTARG
+      ;;
+    p)
+      reproject=$OPTARG
+      ;;
     *)
       usage
       ;;
@@ -18,7 +24,7 @@ done
 
 shift $((OPTIND-1))
 
-if [ -z "${dbname}" ] || [ -z "${shapefile_dir}" ]; then
+if [ -z "${dbname}" ] || [ -z "${shapefile_dir}" ] || [ -z "${csv_dir}" ]; then
     usage
 fi
 
