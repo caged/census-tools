@@ -1,0 +1,30 @@
+#!/bin/sh
+
+usage() { echo "Usage: $0 [-d postgres database] [-s shapefile directory]" 1>&2; exit 1; }
+
+while getopts ":d:s:" opt; do
+  case $opt in
+    d)
+      dbname=$OPTARG
+      ;;
+    s)
+      shapefile_dir=$OPTARG
+      ;;
+    *)
+      usage
+      ;;
+  esac
+done
+
+shift $((OPTIND-1))
+
+if [ -z "${dbname}" ] || [ -z "${shapefile_dir}" ]; then
+    usage
+fi
+
+# Drop and recreate database
+dropdb --interactive -e $dbname
+createdb --encoding UTF8 $dbname
+
+# Create the POSTGIS tables and data table
+psql -d $dbname -c 'CREATE EXTENSION postgis'
