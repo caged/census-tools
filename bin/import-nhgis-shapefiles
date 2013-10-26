@@ -32,5 +32,17 @@ fi
 dropdb --interactive -e $dbname
 createdb --encoding UTF8 $dbname
 
-# Create the POSTGIS tables and data table
+# Create the POSTGIS extension
 psql -d $dbname -c 'CREATE EXTENSION postgis'
+
+# Create some temporary directories
+tmp_shapefile_dir=$(mktemp -d -t nhgis)
+tmp_reprojected_shapefile_dir=$(mktemp -d -t nhgis)
+tmp_data_dir=$(mktemp -d -t nhgis)
+
+tar -xzm --totals -C $tmp_shapefile_dir -f $shapefile_dir
+
+# Cleanup temporary directories
+rm -rf $tmp_shapefile_dir
+rm -rf $tmp_reprojected_shapefile_dir
+
