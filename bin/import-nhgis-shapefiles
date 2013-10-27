@@ -69,5 +69,12 @@ psql -c "delete from ${dbname}_blocks" $dbname
 # add some attributes that aren't present in all shapefiles when importing
 # two or more files.
 psql -c "alter table ${dbname}_blocks add column uatyp10 varchar(30), add column shape_len numeric" $dbname
+
+# Import all reprojected shape files into the database
+for file in $(find $tmp_reprojected_shapefile_dir -name "*.shp"); do \
+  shp2pgsql -a -g geom -s 4326 -D $file "${dbname}_blocks" | psql -d $dbname
+done
+
+# Cleanup temporary directory for reprojected shapefiles
 rm -rf $tmp_reprojected_shapefile_dir
 
