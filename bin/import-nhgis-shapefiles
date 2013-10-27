@@ -44,7 +44,12 @@ tmp_data_dir=$(mktemp -d -t nhgis)
 tar -xzmv --totals -C $tmp_shapefile_dir -f $shapefile_dir
 tar -xzmv --totals -C $tmp_data_dir -f $csv_dir
 
-# Cleanup temporary directories
+# Decompress any zip files that were part of the original archive
+for file in $(find $tmp_shapefile_dir -name "*.zip"); do \
+  tar -xzmv -C $tmp_shapefile_dir -f $file
+  rm $file
+done
+
 rm -rf $tmp_shapefile_dir
 rm -rf $tmp_reprojected_shapefile_dir
 
