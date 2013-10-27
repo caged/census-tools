@@ -2,7 +2,7 @@
 
 usage() { echo "Usage: $0 [-d postgres database] [-s shapefile directory] [-c csv data directory]" 1>&2; exit 1; }
 
-while getopts ":d:s:" opt; do
+while getopts ":d:s:c:p:" opt; do
   case $opt in
     d)
       dbname=$OPTARG
@@ -24,7 +24,7 @@ done
 
 shift $((OPTIND-1))
 
-if [ -z "${dbname}" ] || [ -z "${shapefile_dir}" ] || [ -z "${csv_dir}" ]; then
+if [ -z "${dbname}" ] || [ -z "${shapefile_dir}" ]; then
     usage
 fi
 
