@@ -40,7 +40,9 @@ tmp_shapefile_dir=$(mktemp -d -t nhgis)
 tmp_reprojected_shapefile_dir=$(mktemp -d -t nhgis)
 tmp_data_dir=$(mktemp -d -t nhgis)
 
-tar -xzm --totals -C $tmp_shapefile_dir -f $shapefile_dir
+# Decompress shape and data files
+tar -xzmv --totals -C $tmp_shapefile_dir -f $shapefile_dir
+tar -xzmv --totals -C $tmp_data_dir -f $csv_dir
 
 # Cleanup temporary directories
 rm -rf $tmp_shapefile_dir
