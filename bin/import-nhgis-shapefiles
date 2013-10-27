@@ -56,6 +56,7 @@ for file in $(find $tmp_shapefile_dir -name "*.shp"); do \
   ogr2ogr -f 'ESRI Shapefile' -t_srs EPSG:4326 "${tmp_reprojected_shapefile_dir}/${file_name}" $file
 done
 
+# Clean up old, unprojected shapefiles
 rm -rf $tmp_shapefile_dir
 rm -rf $tmp_reprojected_shapefile_dir
 
