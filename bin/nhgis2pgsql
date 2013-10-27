@@ -28,7 +28,7 @@ if [ -z "${dbname}" ] || [ -z "${shapefile_dir}" ]; then
     usage
 fi
 
-# Drop and recreate database
+# Drop and recreate database, but ask for confirmation first.
 dropdb --interactive -e $dbname
 createdb --encoding UTF8 $dbname
 
