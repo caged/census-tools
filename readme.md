@@ -4,7 +4,7 @@ Currently there is one command [`nhgis2pgsql`](bin/nhgis2pgsql) that can import 
 
 ### Example
 
-``` cli
+``` bash
 $ ./bin/nhgis2pgsql -d nhgis -s ~/Desktop/nhgis0010_shape.zip -c ~/Desktop/nhgis0010_csv.zip
 ```
 
