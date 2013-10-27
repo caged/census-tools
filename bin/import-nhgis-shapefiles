@@ -58,5 +58,11 @@ done
 
 # Clean up old, unprojected shapefiles
 rm -rf $tmp_shapefile_dir
+
+# Create initial table schema and then delete the data so we can itterate through
+# all the files later to append them to the table
+first_file=$(find $tmp_reprojected_shapefile_dir -name "*.shp" | head -n 1)
+shp2pgsql -s 4326 -i -D $first_file "${dbname}_blocks" | psql $dbname
+psql -c "delete from ${dbname}_blocks" $dbname
 rm -rf $tmp_reprojected_shapefile_dir
 
