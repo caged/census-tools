@@ -1,5 +1,9 @@
 #!/bin/sh
-
+#
+# Example:
+#
+#   $ ./bin/nhgis2pgsql -d nhgis -s ~/Desktop/nhgis0010_shape.zip -c ~/Desktop/nhgis0010_csv.zip
+#
 usage() { echo "Usage: $0 [-d postgres database] [-s shapefile directory] [-c csv data directory]" 1>&2; exit 1; }
 
 while getopts ":d:s:c:p:" opt; do
@@ -24,8 +28,8 @@ done
 
 shift $((OPTIND-1))
 
-if [ -z "${dbname}" ] || [ -z "${shapefile_dir}" ]; then
-    usage
+if [ -z "${dbname}" ] || [ -z "${shapefile_dir}" ] || [ -z "${csv_dir}" ]; then
+  usage
 fi
 
 # Drop and recreate database, but ask for confirmation first.
