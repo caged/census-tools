@@ -82,3 +82,5 @@ rm -rf $tmp_reprojected_shapefile_dir
 for file in $(find $tmp_reprojected_shapefile_dir -name "*.csv"); do \
    csv2psql --utf8 --datatype="TTRACTA,TBLKGRPA:str" $file "${dbname}_data" | psql -d $dbname
 done
+
+rm -rf $tmp_data_dir
