@@ -69,8 +69,8 @@ rm -rf $tmp_shapefile_dir
 # Create initial table schema and then delete the data so we can itterate through
 # all the files later to append them to the table
 first_file=$(find $tmp_reprojected_shapefile_dir -name "*.shp" | head -n 1)
-shp2pgsql -s 4326 -i -D $first_file "${dbname}_blocks" | psql $dbname
-psql -c "delete from ${dbname}_blocks" $dbname
+shp2pgsql -W "latin1" -s 4326 -i -D $first_file "${dbname}_${tablename}" | psql $dbname
+psql -c "delete from ${dbname}_${tablename}" $dbname
 
 # NHGIS shape files can be inconsistent in some areas, so we need to manually
 # add some attributes that aren't present in all shapefiles when importing
