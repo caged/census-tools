@@ -79,7 +79,7 @@ psql -c "alter table ${dbname}_${tablename} add column uatyp10 varchar(30), add 
 
 # Import all reprojected shape files into the database
 for file in $(find $tmp_reprojected_shapefile_dir -name "*.shp"); do \
-  shp2pgsql -a -g geom -s 4326 -D $file "${dbname}_blocks" | psql -d $dbname
+  shp2pgsql -W "latin1" -a -g geom -s 4326 -D $file "${dbname}_${tablename}" | psql -d $dbname
 done
 
 # Cleanup temporary directory for reprojected shapefiles
