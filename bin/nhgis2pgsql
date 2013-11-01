@@ -75,7 +75,7 @@ psql -c "delete from ${dbname}_${tablename}" $dbname
 # NHGIS shape files can be inconsistent in some areas, so we need to manually
 # add some attributes that aren't present in all shapefiles when importing
 # two or more files.
-psql -c "alter table ${dbname}_blocks add column uatyp10 varchar(30), add column shape_len numeric" $dbname
+psql -c "alter table ${dbname}_${tablename} add column uatyp10 varchar(30), add column shape_len numeric" $dbname
 
 # Import all reprojected shape files into the database
 for file in $(find $tmp_reprojected_shapefile_dir -name "*.shp"); do \
