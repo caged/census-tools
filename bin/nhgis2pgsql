@@ -4,9 +4,9 @@
 #
 #   $ ./bin/nhgis2pgsql -d nhgis -s ~/Desktop/nhgis0010_shape.zip -c ~/Desktop/nhgis0010_csv.zip
 #
-usage() { echo "Usage: $0 [-d postgres database] [-s shapefile directory] [-c csv data directory]" 1>&2; exit 1; }
+usage() { echo "Usage: $0 [-d postgres database] [-s shapefile directory] [-c csv data directory] [-t table identifier]" 1>&2; exit 1; }
 
-while getopts ":d:s:c:p:" opt; do
+while getopts ":d:s:c:p:t:" opt; do
   case $opt in
     d)
       dbname=$OPTARG
@@ -20,6 +20,9 @@ while getopts ":d:s:c:p:" opt; do
     p)
       reproject=$OPTARG
       ;;
+    t)
+      tablename=$OPTARG
+      ;;
     *)
       usage
       ;;
@@ -28,7 +31,7 @@ done
 
 shift $((OPTIND-1))
 
-if [ -z "${dbname}" ] || [ -z "${shapefile_dir}" ] || [ -z "${csv_dir}" ]; then
+if [ -z "${dbname}" ] || [ -z "${shapefile_dir}" ] || [ -z "${csv_dir}" ] || [ -z "${tablename}" ]; then
   usage
 fi
 
