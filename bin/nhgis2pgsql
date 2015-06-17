@@ -36,11 +36,11 @@ if [ -z "${dbname}" ] || [ -z "${shapefile_dir}" ] || [ -z "${csv_dir}" ] || [ -
 fi
 
 # Drop and recreate database, but ask for confirmation first.
-dropdb --interactive -e $dbname
-createdb --encoding UTF8 $dbname
-
-# Create the POSTGIS extension
-psql -d $dbname -c 'CREATE EXTENSION postgis'
+# dropdb --interactive -e $dbname
+# createdb --encoding UTF8 $dbname
+#
+# # Create the POSTGIS extension
+# psql -d $dbname -c 'CREATE EXTENSION postgis'
 
 # Create some temporary directories
 tmp_shapefile_dir=$(mktemp -d -t nhgis)
@@ -69,17 +69,17 @@ rm -rf $tmp_shapefile_dir
 # Create initial table schema and then delete the data so we can itterate through
 # all the files later to append them to the table
 first_file=$(find $tmp_reprojected_shapefile_dir -name "*.shp" | head -n 1)
-shp2pgsql -W "latin1" -s 4326 -i -D $first_file "${dbname}_${tablename}" | psql $dbname
-psql -c "delete from ${dbname}_${tablename}" $dbname
+shp2pgsql -W "latin1" -s 4326 -i -D $first_file "${tablename}" | psql $dbname
+psql -c "delete from ${tablename}" $dbname
 
 # NHGIS shape files can be inconsistent in some areas, so we need to manually
 # add some attributes that aren't present in all shapefiles when importing
 # two or more files.
-psql -c "alter table ${dbname}_${tablename} add column uatyp10 varchar(30), add column shape_len numeric" $dbname
+psql -c "alter table ${tablename} add column uatyp10 varchar(30), add column shape_len numeric" $dbname
 
 # Import all reprojected shape files into the database
 for file in $(find $tmp_reprojected_shapefile_dir -name "*.shp"); do \
-  shp2pgsql -W "latin1" -a -g geom -s 4326 -D $file "${dbname}_${tablename}" | psql -d $dbname
+  shp2pgsql -t 2D -I -D -d -W "latin1" -a -g geom -s 4326 -D $file "${tablename}" | psql -d $dbname
 done
 
 # Cleanup temporary directory for reprojected shapefiles
@@ -88,7 +88,7 @@ rm -rf $tmp_reprojected_shapefile_dir
 # Import all data files into the database
 for file in $(find $tmp_data_dir -name "*.csv"); do \
   iconv -c -f UTF-8 -t UTF-8 < "${file}" > "${file}.utf8.csv"
-  csv2psql --utf8 --datatype="TTRACTA,TBLKGRPA:str" "${file}.utf8.csv" "${dbname}_${tablename}_data" | psql -d $dbname
+  csv2psql --utf8 --datatype="TTRACTA,TBLKGRPA:str" "${file}.utf8.csv" "${tablename}_data" | psql -d $dbname
 done
 
 rm -rf $tmp_data_dir
